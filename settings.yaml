@@ -23,9 +23,12 @@ host:
     restrictedmode:
         name: restricted_mode
         type: b
-        default: false
+        default: false 
     bootpolicy:
         name: boot_policy
         type: s
         default: "ONETIME"
-
+    networkconfig:
+        name: network_config
+        type: s
+        default: "ipaddress=,prefix=,gateway=,mac=,dhcp=" 
