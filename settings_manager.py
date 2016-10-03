@@ -19,12 +19,55 @@ import settings_file as s
 import re
 
 DBUS_NAME = 'org.openbmc.settings.Host'
-OBJ_NAME = '/org/openbmc/settings/host0'
 CONTROL_INTF = 'org.openbmc.Settings'
 
+def walk_nest(d, keys =()):
+    """Arrange dictionary keys and values.
+
+    Walk the dictionary and establish every possible path
+    returned to and processed by 'create_object' below
+    """
+    if isinstance(d, dict):
+        for k in d:
+            for rv in walk_nest(d[k], keys + (k, )):
+                yield rv
+    else:
+        yield keys, d
+
+def create_object(settings):
+    """Create and format objects.
+
+    Parse dictionary file and return all objects and main properties
+    (name, type, default) for each attribute in the following format:
+    [dbus_name, obj_name, attr_ name, attr_ type, default]
+    """
+    allobjects = []
+    lastattr = None
+    for compound_key, val in walk_nest(settings):
+        attribute = compound_key[len(compound_key) - 2]
+        if  lastattr is not None and attribute != lastattr:
+            allobjects.append((dbus_name, obj_name, attr_name, attr_type, default))
+            attr_name = None
+            attr_type = None
+            default = None
+        lastattr = attribute
+        dbus_name = compound_key[0]
+        obj_name = compound_key[0].lower()
+        obj_name = obj_name.replace(".","/")
+        obj_name = "/" + obj_name + "0"
+        for i in compound_key[1:len(compound_key)-2]:
+            obj_name = obj_name + "/" + i
+        if compound_key[len(compound_key) - 1] == 'name':
+            attr_name = val;
+        elif compound_key[len(compound_key) - 1] == 'type':
+            attr_type = val;
+        elif compound_key[len(compound_key) - 1] == 'default':
+            default = val;
+    allobjects.append((dbus_name, obj_name, attr_name, attr_type, default))
+    return allobjects
 
 class HostSettingsObject(DbusProperties):
-    def __init__(self, bus, name, settings, path):
+    def __init__(self, bus, name, allobjects, path):
         super(HostSettingsObject, self).__init__(
             conn=bus,
             object_path=name,
@@ -43,14 +86,16 @@ class HostSettingsObject(DbusProperties):
             self.settings_signal_handler,
             dbus_interface="org.freedesktop.DBus.Properties",
             signal_name="PropertiesChanged",
-            path="/org/openbmc/settings/host0")
+            path=name)
 
         # Create the dbus properties
-        for i in settings[DBUS_NAME].iterkeys():
-            shk = settings[DBUS_NAME][i]
-            self.set_settings_property(shk['name'],
-                                       shk['type'],
-                                       shk['default'])
+        for dbus_name, obj_name, attr_name, attr_type, default in allobjects:
+            if obj_name != name:
+                continue
+            self.set_settings_property(dbus_name,
+                                       attr_name,
+                                       attr_type,
+                                       default)
         # Done with consuming factory settings.
         self.adminmode = False
 
@@ -66,16 +111,16 @@ class HostSettingsObject(DbusProperties):
     # This will be either a value previously set,
     # or the default file value if the BMC value
     # does not exist.
-    def set_settings_property(self, name, type, value):
-        bmcv = self.get_bmc_value(name)
+    def set_settings_property(self, dbus_name, attr_name, attr_type, value):
+        bmcv = self.get_bmc_value(attr_name)
         if bmcv:
             value = bmcv
-        if type == "i":
-            self.Set(DBUS_NAME, name, int(value))
-        elif type == "s":
-            self.Set(DBUS_NAME, name, str(value))
-        elif type == "b":
-            self.Set(DBUS_NAME, name, bool(value))
+        if attr_type == "i":
+            self.Set(dbus_name, attr_name, int(value))
+        elif attr_type == "s":
+            self.Set(dbus_name, attr_name, str(value))
+        elif attr_type == "b":
+            self.Set(dbus_name, attr_name, bool(value))
 
     # Save the settings to the BMC. This will write the settings value in
     # individual files named by the property name to the BMC.
@@ -183,11 +228,17 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     bus = get_dbus()
-    obj = HostSettingsObject(bus, OBJ_NAME, s.SETTINGS, "/var/lib/obmc/")
-    mainloop = gobject.MainLoop()
+    allobjects = create_object(s.SETTINGS)
+    lastobject = None
+    for dbus_name, obj_name, _, _, _ in allobjects:
+        if obj_name == lastobject:
+            continue
+        lastobject = obj_name
+        obj = HostSettingsObject(bus, obj_name, allobjects, "/var/lib/obmc/")
+        mainloop = gobject.MainLoop()
 
-    obj.unmask_signals()
-    name = dbus.service.BusName(DBUS_NAME, bus)
+        obj.unmask_signals()
+        name = dbus.service.BusName(dbus_name, bus)
     print "Running HostSettingsService"
     mainloop.run()
 
