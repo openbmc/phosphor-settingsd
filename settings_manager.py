@@ -146,7 +146,7 @@ class HostSettingsObject(DbusProperties):
                 self.validate_range(0, 33, int(value))
 
             elif key.lower() == 'addr_type':
-                allowed = ["STATIC", "DYNAMIC"]
+                allowed = ["0", "1"]
                 self.validate_list_ignore_case(allowed, value)
 
         # Did user pass everything ??
