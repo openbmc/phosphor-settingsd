@@ -17,9 +17,12 @@ settings_file_path = os.path.join(
 sys.path.insert(1, settings_file_path)
 import settings_file as s
 import re
+import obmc.mapper
 
 DBUS_NAME = 'org.openbmc.settings.Host'
 CONTROL_INTF = 'org.openbmc.Settings'
+INVENTORY = '/org/openbmc/inventory'
+CONTROL = '/org/openbmc/control'
 
 def walk_nest(d, keys =()):
     """Arrange dictionary keys and values.
@@ -41,6 +44,7 @@ def create_object(settings):
     (name, type, default) for each attribute in the following format:
     [obj_name, attr_ name, attr_ type, default]
     """
+    mapper = obmc.mapper.Mapper(bus)
     allobjects = []
     lastattr = None
     for compound_key, val in walk_nest(settings):
@@ -63,6 +67,37 @@ def create_object(settings):
         elif compound_key[len(compound_key) - 1] == 'default':
             default = val;
     allobjects.append((obj_name, attr_name, attr_type, default))
+    attr_name = None
+    attr_type = None
+    default = None
+    for key in settings:
+        print
+        print key
+        k = key.rfind(".")
+        key = key[k+1:].lower()
+        if key == 'host' or key == 'bmc': #For now. Query will be in YAML
+            query = CONTROL
+            regex = CONTROL + '/(' + key + '\d*)$'
+        else:
+            query = INVENTORY
+            regex = '('+key+'\d*)$'
+        print "Search for '" + key + "' in", query
+        print
+        mpr = mapper.get_subtree(query, 0)
+        for line in mpr:
+            print line
+            m = re.search(regex, line)
+            if m:
+                new_obj = "/org/openbmc/settings/" + m.group(1)
+                obj_exists = False
+                for obj_name, _, _, _ in allobjects:
+                    if obj_name == new_obj:
+                        obj_exists = True
+                        break
+                if not obj_exists:
+                    allobjects.append((new_obj, attr_name, attr_type, default))
+                    print m.group(1), "found, object", new_obj, "created"
+                else: print "Object", new_obj, "exists. Skip"
     return allobjects
 
 class HostSettingsObject(DbusProperties):
@@ -89,7 +124,7 @@ class HostSettingsObject(DbusProperties):
 
         # Create the dbus properties
         for obj_name, attr_name, attr_type, default in allobjects:
-            if obj_name != name:
+            if attr_name is None or obj_name != name:
                 continue
             self.set_settings_property(attr_name,
                                        attr_type,
@@ -233,6 +268,7 @@ if __name__ == '__main__':
             continue
         lastobject = obj_name
         obj = HostSettingsObject(bus, obj_name, allobjects, "/var/lib/obmc/")
+        print obj
         obj.unmask_signals()
     mainloop = gobject.MainLoop()
     name = dbus.service.BusName(DBUS_NAME, bus)
