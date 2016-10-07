@@ -17,6 +17,7 @@ settings_file_path = os.path.join(
 sys.path.insert(1, settings_file_path)
 import settings_file as s
 import re
+import obmc.mapper
 
 DBUS_NAME = 'org.openbmc.settings.Host'
 CONTROL_INTF = 'org.openbmc.Settings'
@@ -41,38 +42,49 @@ def create_object(settings):
     (name, type, default) for each attribute in the following format:
     [obj_name, attr_ name, attr_ type, default]
     """
-    allobjects = []
-    lastattr = None
+    mapper = obmc.mapper.Mapper(bus)
+    allobjects = {}
+    query_objs = {}
     for compound_key, val in walk_nest(settings):
-        attribute = compound_key[len(compound_key) - 2]
-        if  lastattr is not None and attribute != lastattr:
-            allobjects.append((obj_name, attr_name, attr_type, default))
-            attr_name = None
-            attr_type = None
-            default = None
-        lastattr = attribute
         obj_name = compound_key[0].lower()
         obj_name = obj_name.replace(".","/")
         obj_name = "/" + obj_name + "0"
+
         for i in compound_key[1:len(compound_key)-2]:
             obj_name = obj_name + "/" + i
-        if compound_key[len(compound_key) - 1] == 'name':
-            attr_name = val;
-        elif compound_key[len(compound_key) - 1] == 'type':
-            attr_type = val;
-        elif compound_key[len(compound_key) - 1] == 'default':
-            default = val;
-    allobjects.append((obj_name, attr_name, attr_type, default))
+
+        setting = compound_key[len(compound_key) - 2]
+        attribute = compound_key[len(compound_key) - 1]
+
+        o = allobjects.setdefault(obj_name, {})
+        s = o.setdefault(setting, {'name': None, 'type': None, 'default': None})
+        s[attribute] = val
+    for o, settings in allobjects.iteritems():
+        for setting in settings.itervalues():
+            if setting['name'] is not 'instance_query':
+                continue
+            mpr = mapper.get_subtree(setting['subtree'], 0)
+            for line in mpr:
+                m = re.search(setting['matchregex'], line)
+                if not m:
+                    continue
+                new_obj = "/org/openbmc/settings/" + m.group(1)
+                if new_obj != o:
+                    query_objs.setdefault(new_obj, settings)
+    allobjects.update(query_objs)
     return allobjects
 
 class HostSettingsObject(DbusProperties):
-    def __init__(self, bus, name, allobjects, path):
+    def __init__(self, bus, name, settings, path):
         super(HostSettingsObject, self).__init__(
             conn=bus,
             object_path=name,
             validator=self.input_validator)
         self.bus = bus
         self.path = path
+        self.name = name
+        self.settings = settings
+
         # Needed to ignore the validation on default networkconfig values as
         # opposed to user giving the same.
         self.adminmode = True
@@ -88,12 +100,10 @@ class HostSettingsObject(DbusProperties):
             path=name)
 
         # Create the dbus properties
-        for obj_name, attr_name, attr_type, default in allobjects:
-            if obj_name != name:
-                continue
-            self.set_settings_property(attr_name,
-                                       attr_type,
-                                       default)
+        for setting in settings.itervalues():
+            self.set_settings_property(setting['name'],
+                    setting['type'],
+                    setting['default'])
         # Done with consuming factory settings.
         self.adminmode = False
 
@@ -199,27 +209,27 @@ class HostSettingsObject(DbusProperties):
 
     # Validate to see if the changes are in order
     def input_validator(self, iface, proprty, value):
-        settings = s.SETTINGS
-        shk = {}
-        for key in settings[iface].iterkeys():
-            if proprty == settings[iface][key]['name']:
-                shk = settings[iface][key]
-                break
-
         # User entered key is not present
-        if not shk:
+        shk = None
+        for attr in self.settings.itervalues():
+            if attr['name'] == proprty:
+                shk = attr
+
+        if shk is None:
             raise KeyError("Invalid Property")
 
-        if shk['validation'] == 'list':
+        validation = shk.get('validation', None)
+
+        if validation == 'list':
             self.validate_list_ignore_case(shk['allowed'], value)
 
-        elif shk['validation'] == 'range':
+        elif validation == 'range':
             self.validate_range(shk['min'], shk['max']+1, value)
 
-        elif shk['validation'] == 'regex':
+        elif validation == 'regex':
             self.validate_regex(shk['regex'], value)
 
-        elif shk['validation'] == 'custom':
+        elif validation == 'custom':
             getattr(self, shk['method'])(value)
 
 if __name__ == '__main__':
@@ -228,12 +238,11 @@ if __name__ == '__main__':
     bus = get_dbus()
     allobjects = create_object(s.SETTINGS)
     lastobject = None
-    for obj_name, _, _, _ in allobjects:
-        if obj_name == lastobject:
-            continue
-        lastobject = obj_name
-        obj = HostSettingsObject(bus, obj_name, allobjects, "/var/lib/obmc/")
-        obj.unmask_signals()
+    objs = []
+    for o, settings in allobjects.iteritems():
+        objs.append(HostSettingsObject(bus, o, settings, "/var/lib/obmc/"))
+        objs[-1].unmask_signals()
+
     mainloop = gobject.MainLoop()
     name = dbus.service.BusName(DBUS_NAME, bus)
     print "Running HostSettingsService"
