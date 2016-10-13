@@ -63,6 +63,48 @@ org.openbmc.settings.Host:
         default: "yes"
         validation: list
         allowed: ["yes", "no"]
+    query:
+        name: instance_query
+        keyregex: "host"
+        subtree: "/org/openbmc/control"
+        matchregex: "control/(host\d*)$"
+org.openbmc.settings.Bmc:
+    clock:
+        ntp:
+            name: ntp
+            type: s
+            default: "yes"
+    dhcp:
+        name: dhcp
+        default: "yes"
+    query:
+        name: instance_query
+        keyregex: "bmc"
+        subtree: "/org/openbmc/control"
+        matchregex: "control/(bmc\d*)$"
+org.openbmc.settings.Power:
+    foozball:
+        name: fooz_ball
+        type: i 
+        default: 0
+        min: 0
+        max: 1000 
+        unit: watts
+        validation: None
+    query:
+        name: instance_query
+        keyregex: "power"
+        subtree: "/org/openbmc/control"
+        matchregex: "control/(power\d*)$"
+org.openbmc.settings.Dimm:
+    dimm:
+        name: dimm
+        default: "yes"
+    query:
+        name: instance_query
+        keyregex: "dimm"
+        subtree: "/org/openbmc/inventory"
+        matchregex: "/(dimm\d*)$"
 
 # Example of using regex
 #    macaddress:
