@@ -72,9 +72,11 @@ def create_object(settings):
             for path in paths:
                 m = re.search(setting['matchregex'], path)
                 if not m:
-                    continue
-                allobjects.setdefault(
-                    "/org/openbmc/settings/" + m.group(1), settings)
+                   allobjects.setdefault(
+                       "/org/openbmc/settings/host0", settings)
+                else:
+                   allobjects.setdefault(
+                       "/org/openbmc/settings/" + m.group(1), settings)
     return allobjects
 
 class HostSettingsObject(DbusProperties):
