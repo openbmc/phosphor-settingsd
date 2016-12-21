@@ -7,7 +7,7 @@ import dbus.mainloop.glib
 import os
 import os.path as path
 import sys
-from obmc.dbuslib.bindings import DbusProperties, get_dbus
+from obmc.dbuslib.bindings import DbusProperties, DbusObjectManager, get_dbus
 from IPy import IP
 
 settings_file_path = os.path.join(
@@ -68,7 +68,17 @@ def create_object(settings):
         for setting in settings.itervalues():
             if setting['type'] is not 'instance_query':
                 continue
-            paths = mapper.get_subtree_paths(setting['subtree'], 0)
+            max_retries = 10
+            for retries in range(max_retries):
+                try:
+                    paths = mapper.get_subtree_paths(setting['subtree'], 0)
+                    break
+                except dbus.exceptions.DBusException as e:
+                    print >> sys.stderr, 'Error on get_subtree_paths: ' + str(e)
+                    if retries >= max_retries - 1:
+                        raise e
+                    from time import sleep
+                    sleep(0.1)
 
             if setting['keyregex'] == 'host':
                 # Always create at least one host object.
@@ -82,7 +92,7 @@ def create_object(settings):
                     "/org/openbmc/settings/" + m.group(1), settings)
     return allobjects
 
-class HostSettingsObject(DbusProperties):
+class HostSettingsObject(DbusProperties, DbusObjectManager):
     def __init__(self, bus, name, settings, path):
         super(HostSettingsObject, self).__init__(
             conn=bus,
