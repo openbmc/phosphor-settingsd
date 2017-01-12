@@ -170,8 +170,8 @@ class HostSettingsObject(DbusProperties):
         if value not in range(min, max):
             raise ValueError("Invalid input. Data not in allowed range")
 
-    def validate_list_ignore_case(self, lst, value):
-        if value.lower() not in map(lambda val: val.lower(), lst):
+    def validate_list(self, lst, value):
+        if value not in map(lambda val: val, lst):
             raise ValueError("Invalid input. Data not in allowed values")
 
     # validate host network configuration
@@ -211,7 +211,7 @@ class HostSettingsObject(DbusProperties):
 
             elif key.lower() == 'addr_type':
                 allowed = ["STATIC", "DYNAMIC"]
-                self.validate_list_ignore_case(allowed, value)
+                self.validate_list(allowed, value)
 
         # Did user pass everything ??
         if set(all_config) - set(user_config):
@@ -232,7 +232,7 @@ class HostSettingsObject(DbusProperties):
         validation = shk.get('validation', None)
 
         if validation == 'list':
-            self.validate_list_ignore_case(shk['allowed'], value)
+            self.validate_list(shk['allowed'], value)
 
         elif validation == 'range':
             self.validate_range(shk['min'], shk['max']+1, value)
