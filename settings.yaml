@@ -70,6 +70,13 @@ org.openbmc.settings.Host:
             default: "yes"
             validation: list
             allowed: ["yes", "no"]
+        RebootCounter:
+            name: reboot_counter
+            type: i
+            default: 0
+            min: 0
+            max: 10
+            validation: range
     query:
         type: instance_query
         keyregex: "host"
