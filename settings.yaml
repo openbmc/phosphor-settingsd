@@ -70,6 +70,14 @@ org.openbmc.settings.Host:
             default: "yes"
             validation: list
             allowed: ["yes", "no"]
+        bmcdumpsize:
+            name: bmc_dump_size
+            type: i
+            default: 0
+            min:  0
+            max:  512
+            unit: kilobyte
+            validation: range
     query:
         type: instance_query
         keyregex: "host"
