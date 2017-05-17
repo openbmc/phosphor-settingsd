@@ -1,0 +1,18 @@
+/xyz/openbmc_project/settings/host0/boot_mode:
+    Interface: xyz.openbmc_project.Settings.Boot.Mode
+    Defaults:
+        BootMode: boot::Mode::Modes::Safe
+
+/xyz/openbmc_project/settings/host1/boot_mode:
+    Interface: xyz.openbmc_project.Settings.Boot.Mode
+    Defaults:
+        BootMode: boot::Mode::Modes::Regular
+
+/xyz/openbmc_project/settings/host0/network_config:
+    Interface: xyz.openbmc_project.Settings.Network.Config
+    Defaults:
+        IPAddress: '"0.0.0.0"'
+        Prefix: 32
+
+/xyz/openbmc_project/settings/host0/boot_mode_scope:
+    Interface: xyz.openbmc_project.Settings.Scope
