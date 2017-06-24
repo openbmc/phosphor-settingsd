@@ -12,6 +12,11 @@ AC_PROG_MAKE_SET
 AM_PATH_PYTHON([2.7], [AC_SUBST([PYTHON], [echo "$PYTHON"])], [AC_MSG_ERROR(
     [Could not find python-2.7 installed...python-2.7 is required])])
 
+# Checks for header files.
+AC_CHECK_HEADER(cereal/archives/json.hpp, ,\
+    [AC_MSG_ERROR([\
+        Could not find cereal/archives/json.hpp. Cereal dev package required])])
+
 PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces],,\
     AC_MSG_ERROR(["Requires phosphor-dbus-interfaces package."]))
 PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus],,
@@ -31,6 +36,13 @@ AC_DEFINE_UNQUOTED([SETTINGS_BUSNAME], ["$SETTINGS_BUSNAME"],\
 AS_IF([test "x$SETTINGS_YAML" == "x"], [SETTINGS_YAML="settings_example.yaml"])
 SETTINGSGEN="$PYTHON $srcdir/settings.py -i $SETTINGS_YAML"
 AC_SUBST(SETTINGSGEN)
+
+AC_ARG_VAR(SETTINGS_PERSIST_PATH, \
+    [Path of directory housing persisted settings.])
+AS_IF([test "x$SETTINGS_PERSIST_PATH" == "x"], \
+    [SETTINGS_PERSIST_PATH="/var/lib/phosphor-settings-manager/settings"])
+AC_DEFINE_UNQUOTED([SETTINGS_PERSIST_PATH], ["$SETTINGS_PERSIST_PATH"], \
+    [Path of directory housing persisted settings])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
