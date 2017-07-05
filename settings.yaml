@@ -49,13 +49,13 @@ org.openbmc.settings.Host:
         TimeMode:
             name: time_mode
             type: s
-            default: "NTP"
+            default: "MANUAL"
             validation: list
             allowed: ["NTP", "MANUAL"]
         TimeOwner:
             name: time_owner
             type: s
-            default: "BMC"
+            default: "BOTH"
             validation: list
             allowed: ["BMC", "HOST", "SPLIT", "BOTH"]
         UseDhcpNtp:
