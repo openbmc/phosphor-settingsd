@@ -8,6 +8,7 @@ sdbusplus_namespaces = []
 sdbusplus_includes = []
 interfaces = []
 props = defaultdict(list)
+vals = defaultdict(list)
 
 def get_setting_sdbusplus_type(setting_intf):
     setting = "sdbusplus::" + setting_intf.replace('.', '::')
@@ -33,7 +34,11 @@ def get_setting_type(setting_intf):
 #include <fstream>
 #include <utility>
 #include <experimental/filesystem>
+#include <regex>
+#include <phosphor-logging/elog.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 #include "config.h"
+#include <xyz/openbmc_project/Common/error.hpp>
 
 % for i in set(sdbusplus_includes):
 #include "${i}"
@@ -64,8 +69,12 @@ using namespace ${n};
     intf = settingsDict[object]['Interface']
     interfaces.append(intf)
     if intf not in props:
-        for property, value in settingsDict[object]['Defaults'].items():
-            props[intf].append(property)
+        for property_name, property in settingsDict[object]['Defaults'].items():
+            props[intf].append(property_name)
+            for attribute_name, attribute in property.items():
+                if attribute_name == 'Validation':
+                    vals[property_name].append(attribute['Type'])
+                    vals[property_name].append(attribute['validator'])
 %>\
 % endfor
 % for intf in set(interfaces):
@@ -94,11 +103,29 @@ class Impl : public Parent
 
 % for arg in props[intf]:
 <% t = arg[:1].lower() + arg[1:] %>\
+<% fname = "Validate"+arg %>\
         decltype(std::declval<Base>().${t}()) ${t}(decltype(std::declval<Base>().${t}()) value) override
         {
             auto result = Base::${t}();
             if (value != result)
             {
+            % if arg in vals.keys():
+                if (!${fname}(value))
+                {
+                    namespace error =
+                        sdbusplus::xyz::openbmc_project::Common::Error;
+                    namespace metadata =
+                        phosphor::logging::xyz::openbmc_project::Common;
+                    phosphor::logging::report<error::InvalidArgument>(
+                        metadata::InvalidArgument::ARGUMENT_NAME("${t}"),
+                    % if vals[arg][0] <> "string":
+                        metadata::InvalidArgument::ARGUMENT_VALUE(std::to_string(value).c_str()));
+                    % else:
+                        metadata::InvalidArgument::ARGUMENT_VALUE(value.c_str()));
+                    % endif 
+                    return result;
+                }
+             % endif
                 fs::path p(SETTINGS_PERSIST_PATH);
                 p /= path;
                 fs::create_directories(p.parent_path());
@@ -114,6 +141,31 @@ class Impl : public Parent
 % endfor
     private:
         fs::path path;
+% for arg in props[intf]:
+% if arg in vals.keys():
+<% funcName = "Validate"+arg %>
+<% t = arg[:1].lower() + arg[1:] %>
+        bool ${funcName}(decltype(std::declval<Base>().${t}()) value)
+        {
+             bool matched = false;
+             % if (arg in vals.keys()) and (vals[arg][0] == 'string'):
+                std::smatch pieces_match;
+                std::regex regexToCheck("${vals[arg][1]}");
+                matched = std::regex_match(value, pieces_match, regexToCheck);
+            % elif (arg in vals.keys()) and (vals[arg][0] == 'range'):
+                std::string rangeToCheck("${{vals[arg][1]}}");
+                std::size_t pos = rangeToCheck.rfind("..");
+                decltype(std::declval<Base>().${t}()) low = std::stoi(rangeToCheck.substr(0,pos));
+                decltype(std::declval<Base>().${t}()) high = std::stoi(rangeToCheck.substr(pos+2));
+                if ((value <= high)&&(value >= low))
+                {
+                    matched = true;
+                }
+            % endif
+            return matched;
+        }
+% endif
+% endfor
 };
 
 template<class Archive>
@@ -186,6 +238,7 @@ class Manager
 % for index, object in enumerate(objects):
   % for property, value in settingsDict[object]['Defaults'].items():
 <% p = property[:1].lower() + property[1:] %>\
+<% defaultValue = value['Default'] %>\
             path = fs::path(SETTINGS_PERSIST_PATH) / "${object}";
             if (fs::exists(path))
             {
@@ -196,7 +249,7 @@ class Manager
             else
             {
                 std::get<${index}>(settings)->
-                    ${get_setting_sdbusplus_type(settingsDict[object]['Interface'])}::${p}(${value});
+                    ${get_setting_sdbusplus_type(settingsDict[object]['Interface'])}::${p}(${defaultValue});
             }
   % endfor
             std::get<${index}>(settings)->emit_object_added();

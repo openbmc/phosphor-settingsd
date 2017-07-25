@@ -1,9 +1,41 @@
 /xyz/openbmc_project/control/host0/boot_mode:
     Interface: xyz.openbmc_project.Control.Boot.Mode
     Defaults:
-        BootMode: Mode::Modes::Safe
+        BootMode:
+            Default: Mode::Modes::Safe
 
 /xyz/openbmc_project/control/host1/boot_mode:
     Interface: xyz.openbmc_project.Control.Boot.Mode
     Defaults:
-        BootMode: Mode::Modes::Regular
+        BootMode:
+            Default: Mode::Modes::Regular
+
+/xyz/openbmc_project/network/host0/intf:
+    Interface: xyz.openbmc_project.Network.MACAddress
+    Defaults:
+        MACAddress:
+            Default: '"00:00:00:00:00:00"'
+            Validation:
+                Type: "string"
+                validator: '^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$'
+
+/xyz/openbmc_project/network/host0/intf/addr:
+    Interface: xyz.openbmc_project.Network.IP
+    Defaults:
+        Address:
+            Default: '"0.0.0.0"'
+            Validation:
+                Type: "string"
+                validator: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+        PrefixLength:
+            Default: 0
+            Validation:
+                Type: "range"
+                validator: "0..5"
+        Origin:
+            Default: IP::AddressOrigin::Static
+        Gateway:
+            Default: '"0.0.0.0"'
+            Validation:
+                Type: "string"
+                validator: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
