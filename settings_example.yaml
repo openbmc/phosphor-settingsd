@@ -1,9 +1,42 @@
 /xyz/openbmc_project/control/host0/boot_mode:
     Interface: xyz.openbmc_project.Control.Boot.Mode
-    Defaults:
-        BootMode: Mode::Modes::Safe
+    Properties:
+        BootMode:
+            Default: Mode::Modes::Safe
 
 /xyz/openbmc_project/control/host1/boot_mode:
     Interface: xyz.openbmc_project.Control.Boot.Mode
-    Defaults:
-        BootMode: Mode::Modes::Regular
+    Properties:
+        BootMode:
+            Default: Mode::Modes::Regular
+
+/xyz/openbmc_project/network/host0/intf:
+    Interface: xyz.openbmc_project.Network.MACAddress
+    Properties:
+        MACAddress:
+            Default: '"00:00:00:00:00:00"'
+            Validation:
+                Type: "regex"
+                Validator: '^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$'
+
+/xyz/openbmc_project/network/host0/intf/addr:
+    Interface: xyz.openbmc_project.Network.IP
+    Properties:
+        Address:
+            Default: '"0.0.0.0"'
+            Validation:
+                Type: "regex"
+                Validator: '^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+        PrefixLength:
+            Default: 0
+            Validation:
+                Type: "range"
+                Validator: "0..5"
+                Unit: "bits"
+        Origin:
+            Default: IP::AddressOrigin::Static
+        Gateway:
+            Default: '"0.0.0.0"'
+            Validation:
+                Type: "regex"
+                Validator: '^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
