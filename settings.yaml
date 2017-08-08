@@ -10,12 +10,6 @@ org.openbmc.settings.Host:
             max: 1000
             unit: watts
             validation: range
-        bootflags:
-            name: boot_flags
-            type: s
-            default: "Default"
-            validation: list
-            allowed: ["Network", "Disk", "Safe", "CDROM", "Setup", "Default"]
         sysstate:
             name: system_state
             type: s
@@ -34,12 +28,6 @@ org.openbmc.settings.Host:
             min: 0
             max: 1
             validation: range
-        bootpolicy:
-            name: boot_policy
-            type: s
-            default: "ONETIME"
-            validation: list
-            allowed: ["ONETIME", "PERMANENT"]
         networkconfig:
             name: network_config
             type: s
