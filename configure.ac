@@ -4,6 +4,7 @@ AC_LANG([C++])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror foreign dist-xz])
 AM_SILENT_RULES([yes])
+AC_CONFIG_MACRO_DIRS([m4])
 
 AC_PROG_CXX
 AM_PROG_AR
