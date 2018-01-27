@@ -22,7 +22,8 @@ import obmc.mapper
 DBUS_NAME = 'org.openbmc.settings.Host'
 CONTROL_INTF = 'org.openbmc.Settings'
 
-def walk_nest(d, keys =()):
+
+def walk_nest(d, keys=()):
     """Arrange dictionary keys and values.
 
     Walk the dictionary and establish every possible path
@@ -34,6 +35,7 @@ def walk_nest(d, keys =()):
                 yield rv
     else:
         yield keys, d
+
 
 def create_object(settings):
     """Create and format objects.
@@ -47,7 +49,7 @@ def create_object(settings):
     queries = {}
     for compound_key, val in walk_nest(settings):
         obj_name = compound_key[0].lower()
-        obj_name = obj_name.replace(".","/")
+        obj_name = obj_name.replace(".", "/")
         obj_name = "/" + obj_name + "0"
 
         for i in compound_key[2:len(compound_key)-2]:
@@ -82,6 +84,7 @@ def create_object(settings):
                 allobjects.setdefault(
                     "/org/openbmc/settings/" + m.group(1), settings)
     return allobjects
+
 
 class HostSettingsObject(DbusProperties, DbusObjectManager):
     def __init__(self, bus, name, settings, path):
@@ -254,6 +257,7 @@ class HostSettingsObject(DbusProperties, DbusObjectManager):
 
         elif validation == 'custom':
             getattr(self, shk['method'])(value)
+
 
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
