@@ -1,0 +1,8 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+2: Deepak Kodihalli <dkodihal@in.ibm.com>
+Submitted-by: Patrick Venture <venture@google.com>
+Submitted-at: Fri, 29 Mar 2019 15:47:49 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-settingsd/+/19787
+Project: openbmc/phosphor-settingsd
+Branch: refs/heads/master
