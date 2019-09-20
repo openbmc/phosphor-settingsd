@@ -34,3 +34,8 @@ phosphor_settings_manager_LDADD = \
 	$(SDBUSPLUS_LIBS) \
 	$(PHOSPHOR_LOGGING_LIBS) \
 	-lstdc++fs
+
+if LINK_OP_DBUS_INTFS_IPMI
+phosphor_settings_manager_CXXFLAGS += $(OPENPOWER_DBUS_INTERFACES_CFLAGS)
+phosphor_settings_manager_LDADD += $(OPENPOWER_DBUS_INTERFACES_LIBS)
+endif

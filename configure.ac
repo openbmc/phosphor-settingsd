@@ -22,6 +22,8 @@ AX_CXX_COMPILE_STDCXX_17([noext])
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror], [CXXFLAGS])
 
 AC_ARG_VAR(SETTINGS_BUSNAME, [The Dbus busname to own])
+AS_IF([test "x$enable_link_op_dbus_intfs_ipmi" == "xyes"],\
+    [PKG_CHECK_MODULES([OPENPOWER_DBUS_INTERFACES], [openpower-dbus-interfaces])])
 AS_IF([test "x$SETTINGS_BUSNAME" == "x"],\
     [SETTINGS_BUSNAME="xyz.openbmc_project.Settings"])
 AC_DEFINE_UNQUOTED([SETTINGS_BUSNAME], ["$SETTINGS_BUSNAME"],\
@@ -41,6 +43,13 @@ AC_DEFINE_UNQUOTED([SETTINGS_PERSIST_PATH], ["$SETTINGS_PERSIST_PATH"], \
 AC_ARG_VAR(CLASS_VERSION, [Class version to register with Cereal])
 AS_IF([test "x$CLASS_VERSION" == "x"], [CLASS_VERSION=1])
 AC_DEFINE_UNQUOTED([CLASS_VERSION], [$CLASS_VERSION], [Class version to register with Cereal])
+
+AC_ARG_ENABLE([link-op-dbus-intfs-ipmi], AS_HELP_STRING([
+    --enable-link-op-dbus-intfs-ipmi
+    ], [
+    Link with openpower-dbus-interfaces.
+]))
+AM_CONDITIONAL([LINK_OP_DBUS_INTFS_IPMI], [test "x$enable_link_op_dbus_intfs_ipmi" == "xyes"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
