@@ -13,6 +13,7 @@ AM_PATH_PYTHON([2.7], [AC_SUBST([PYTHON], [echo "$PYTHON"])], [AC_MSG_ERROR(
     [Could not find python-2.7 installed...python-2.7 is required])])
 
 PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces])
+PKG_CHECK_MODULES([OPENPOWER_DBUS_INTERFACES], [openpower-dbus-interfaces])
 PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus])
 PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging])
 
@@ -41,6 +42,13 @@ AC_DEFINE_UNQUOTED([SETTINGS_PERSIST_PATH], ["$SETTINGS_PERSIST_PATH"], \
 AC_ARG_VAR(CLASS_VERSION, [Class version to register with Cereal])
 AS_IF([test "x$CLASS_VERSION" == "x"], [CLASS_VERSION=1])
 AC_DEFINE_UNQUOTED([CLASS_VERSION], [$CLASS_VERSION], [Class version to register with Cereal])
+
+AC_ARG_ENABLE([link-op-dbus-intfs], AS_HELP_STRING([
+    --enable-link-op-dbus-intfs
+    ], [
+    Link with openpower-dbus-interfaces.
+]))
+AM_CONDITIONAL([LINK_OP_DBUS_INTFS], [test "x$enable_link_op_dbus_intfs" = "xyes"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
