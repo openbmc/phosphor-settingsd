@@ -1,0 +1,9 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
+Code-Review+2: Deepak Kodihalli <dkodihal@in.ibm.com>
+Submitted-by: Deepak Kodihalli <dkodihal@in.ibm.com>
+Submitted-at: Thu, 02 Apr 2020 12:59:37 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-settingsd/+/30913
+Project: openbmc/phosphor-settingsd
+Branch: refs/heads/master
