@@ -213,7 +213,9 @@ for index, item in enumerate(settingsDict[object]):
     props.extend(intfProps)
 props = ', '.join(props)
 %>\
+% if props:
     a(${props});
+% endif
 }
 
 template<class Archive>
@@ -232,7 +234,10 @@ void load(Archive& a,
   % endfor
 % endfor
 <% props = ', '.join(props) %>
+% if props:
     a(${props});
+% endif
+
 <% props = [] %>
 % for index, item in enumerate(settingsDict[object]):
   % for  prop, metaDict in item['Properties'].items():
