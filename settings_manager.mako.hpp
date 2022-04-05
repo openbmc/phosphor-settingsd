@@ -107,7 +107,7 @@ class Impl : public Parent
 {
     public:
         Impl(sdbusplus::bus::bus& bus, const char* path):
-            Parent(bus, path, true),
+            Parent(bus, path, Parent::action::defer_emit),
             path(path)
         {
         }
