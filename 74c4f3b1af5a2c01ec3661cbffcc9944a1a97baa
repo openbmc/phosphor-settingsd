@@ -1,0 +1,9 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+1: Matt Spinler <spinler@us.ibm.com>
+Code-Review+1: Adriana Kobylak <anoo@linux.ibm.com>
+Code-Review+2: Deepak Kodihalli <deepak.kodihalli.83@gmail.com>
+Submitted-by: Patrick Williams <patrick@stwcx.xyz>
+Submitted-at: Tue, 12 Apr 2022 21:22:44 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-settingsd/+/52653
+Project: openbmc/phosphor-settingsd
+Branch: refs/heads/master
