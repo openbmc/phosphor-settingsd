@@ -18,7 +18,7 @@ PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging])
 
 LT_INIT
 
-AX_CXX_COMPILE_STDCXX_17([noext])
+AX_CXX_COMPILE_STDCXX([20], [noext])
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror], [CXXFLAGS])
 
 AC_ARG_VAR(SETTINGS_BUSNAME, [The Dbus busname to own])
