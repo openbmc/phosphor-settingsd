@@ -272,10 +272,8 @@ class Manager
         /** @brief Constructor to put settings objects on to the bus.
          *  @param[in] bus - Bus to attach to.
          */
-        Manager(sdbusplus::bus::bus& bus)
-        {
-            fs::path path{};
-            settings =
+        explicit Manager(sdbusplus::bus::bus& bus) :
+            settings(
                 std::make_tuple(
 % for index, path in enumerate(objects):
 <% type = get_setting_type(path) + "::Impl" %>\
@@ -287,7 +285,10 @@ class Manager
                         "${path}"));
   % endif
 % endfor
+            )
+        {
 
+            fs::path path{};
 % for index, path in enumerate(objects):
             path = fs::path(SETTINGS_PERSIST_PATH) / "${path}";
             path += persistent::fileSuffix;
