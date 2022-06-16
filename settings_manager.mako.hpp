@@ -37,7 +37,7 @@ def get_setting_type(path):
 #include <cereal/types/vector.hpp>
 #include <fstream>
 #include <utility>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <regex>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/elog-errors.hpp>
@@ -55,7 +55,7 @@ namespace phosphor
 namespace settings
 {
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 namespace persistent
 {

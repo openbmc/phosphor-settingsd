@@ -32,5 +32,4 @@ phosphor_settings_manager_CXXFLAGS = \
 phosphor_settings_manager_LDADD = \
 	$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
 	$(SDBUSPLUS_LIBS) \
-	$(PHOSPHOR_LOGGING_LIBS) \
-	-lstdc++fs
+	$(PHOSPHOR_LOGGING_LIBS)
