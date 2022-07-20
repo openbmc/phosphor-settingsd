@@ -140,7 +140,7 @@ class Impl : public Parent
                 }
              % endif
                 fs::path p(SETTINGS_PERSIST_PATH);
-                p /= path;
+                p /= path.relative_path();
                 p += persistent::fileSuffix;
                 fs::create_directories(p.parent_path());
                 std::ofstream os(p.c_str(), std::ios::binary);
@@ -291,7 +291,8 @@ class Manager
 
             fs::path path{};
 % for index, path in enumerate(objects):
-            path = fs::path(SETTINGS_PERSIST_PATH) / "${path}";
+<% relativePath = path[1:] %>\
+            path = fs::path(SETTINGS_PERSIST_PATH) / "${relativePath}";
             path += persistent::fileSuffix;
             auto initSetting${index} = [&]()
             {
