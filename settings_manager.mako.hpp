@@ -99,14 +99,14 @@ using Iface${index} = ${get_setting_sdbusplus_type(intf)};
 <% aliases.append("Iface" + str(index)) %>\
 % endfor
 <%
-    parent = "sdbusplus::server::object::object" + "<" + ", ".join(aliases) + ">"
+    parent = "sdbusplus::server::object_t" + "<" + ", ".join(aliases) + ">"
 %>\
 using Parent = ${parent};
 
 class Impl : public Parent
 {
     public:
-        Impl(sdbusplus::bus::bus& bus, const char* path):
+        Impl(sdbusplus::bus_t& bus, const char* path):
             Parent(bus, path, Parent::action::defer_emit),
             path(path)
         {
@@ -272,7 +272,7 @@ class Manager
         /** @brief Constructor to put settings objects on to the bus.
          *  @param[in] bus - Bus to attach to.
          */
-        explicit Manager(sdbusplus::bus::bus& bus) :
+        explicit Manager(sdbusplus::bus_t& bus) :
             settings(
                 std::make_tuple(
 % for index, path in enumerate(objects):
