@@ -1,5 +1,4 @@
-## This file is a template.  The comment below is emitted
-## into the rendered file; feel free to edit this file.
+##This file is a template.The comment below is emitted##into the rendered file; feel free to edit this file.
 // WARNING: Generated header. Do not edit!
 <%
 import re
@@ -33,16 +32,17 @@ def get_setting_type(path):
 %>\
     % endfor
 % endfor
+#include "config.h"
+
 #include <cereal/archives/json.hpp>
 #include <cereal/types/vector.hpp>
-#include <fstream>
-#include <utility>
 #include <filesystem>
-#include <regex>
-#include <phosphor-logging/elog.hpp>
+#include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/log.hpp>
-#include "config.h"
+#include <regex>
+#include <utility>
 #include <xyz/openbmc_project/Common/error.hpp>
 using namespace phosphor::logging;
 
@@ -70,7 +70,7 @@ namespace persistent
 // With this the objects would be persisted as - /foo/bar__ and /foo/bar/baz__.
 constexpr auto fileSuffix = "__";
 
-}
+} // namespace persistent
 
 % for object in objects:
 <%
@@ -96,66 +96,68 @@ namespace ${n}
 %>
 % for index, intf in enumerate(interfaces):
 using Iface${index} = ${get_setting_sdbusplus_type(intf)};
-<% aliases.append("Iface" + str(index)) %>\
-% endfor
-<%
-    parent = "sdbusplus::server::object::object" + "<" + ", ".join(aliases) + ">"
-%>\
-using Parent = ${parent};
+<% aliases.append("Iface" + str(index)) %> %
+    endfor<% parent = "sdbusplus::server::object_t" + "<" + ", ".join(aliases) +
+                      ">" %> using Parent = ${parent};
 
 class Impl : public Parent
 {
-    public:
-        Impl(sdbusplus::bus::bus& bus, const char* path):
-            Parent(bus, path, Parent::action::defer_emit),
-            path(path)
-        {
-        }
-        virtual ~Impl() = default;
+  public:
+    Impl(sdbusplus::bus_t& bus, const char* path) :
+        Parent(bus, path, Parent::action::defer_emit), path(path)
+    {
+    }
+    virtual ~Impl() = default;
 
 % for index, item in enumerate(settingsDict[object]):
     % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
 <% fname = "validate" + propName %>\
         decltype(std::declval<Iface${index}>().${t}()) ${t}(decltype(std::declval<Iface${index}>().${t}()) value) override
+{
+    auto result = Iface$
+    {
+        index
+    }
+    ::${t}();
+    if (value != result)
+    {
+        % if propName in validators : if (!${fname}(value))
         {
-            auto result = Iface${index}::${t}();
-            if (value != result)
-            {
-            % if propName in validators:
-                if (!${fname}(value))
-                {
-                    namespace error =
-                        sdbusplus::xyz::openbmc_project::Common::Error;
-                    namespace metadata =
-                        phosphor::logging::xyz::openbmc_project::Common;
-                    phosphor::logging::report<error::InvalidArgument>(
-                        metadata::InvalidArgument::ARGUMENT_NAME("${t}"),
-                    % if validators[propName][0] != "regex":
-                        metadata::InvalidArgument::ARGUMENT_VALUE(std::to_string(value).c_str()));
+            namespace error = sdbusplus::xyz::openbmc_project::Common::Error;
+            namespace metadata =
+                phosphor::logging::xyz::openbmc_project::Common;
+            phosphor::logging::report<error::InvalidArgument>(
+                metadata::InvalidArgument::ARGUMENT_NAME("${t}"),
+                % if validators[propName][0] != "regex"
+                : metadata::InvalidArgument::ARGUMENT_VALUE(
+                    std::to_string(value).c_str()));
                     % else:
                         metadata::InvalidArgument::ARGUMENT_VALUE(value.c_str()));
-                    % endif
-                    return result;
-                }
-             % endif
-                fs::path p(SETTINGS_PERSIST_PATH);
-                p /= path;
-                p += persistent::fileSuffix;
-                fs::create_directories(p.parent_path());
-                std::ofstream os(p.c_str(), std::ios::binary);
-                cereal::JSONOutputArchive oarchive(os);
-                result = Iface${index}::${t}(value);
-                oarchive(*this);
-            }
-            return result;
+                    % endif return result;
         }
-        using Iface${index}::${t};
+        % endif fs::path p(SETTINGS_PERSIST_PATH);
+        p /= path;
+        p += persistent::fileSuffix;
+        fs::create_directories(p.parent_path());
+        std::ofstream os(p.c_str(), std::ios::binary);
+        cereal::JSONOutputArchive oarchive(os);
+        result = Iface$
+        {
+            index
+        }
+        ::${t}(value);
+        oarchive(*this);
+    }
+    return result;
+}
+using Iface$
+{
+    index
+}
+::${t};
 
-    % endfor
-% endfor
-    private:
-        fs::path path;
+% endfor % endfor private : fs::path path;
 % for index, item in enumerate(settingsDict[object]):
   % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
@@ -163,47 +165,49 @@ class Impl : public Parent
     % if propName in validators:
 
         bool ${fname}(decltype(std::declval<Iface${index}>().${t}()) value)
-        {
-            bool matched = false;
-        % if (validators[propName][0] == 'regex'):
-            std::regex regexToCheck("${validators[propName][1]}");
-            matched = std::regex_search(value, regexToCheck);
-            if (!matched)
-            {
-                std::string err = "Input parameter for ${propName} is invalid "
-                    "Input: " + value + " not in the format of this regex: "
-                    "${validators[propName][1]}";
-                using namespace phosphor::logging;
-                log<level::ERR>(err.c_str());
-            }
-        % elif (validators[propName][0] == 'range'):
-<% lowhigh = re.split('\.\.', validators[propName][1]) %>\
-            if ((value <= ${lowhigh[1]}) && (value >= ${lowhigh[0]}))
-            {
-                matched = true;
-            }
-            else
-            {
-                std::string err = "Input parameter for ${propName} is invalid "
-                    "Input: " + std::to_string(value) + "in uint: "
-                    "${validators[propName][2]} is not in range:${validators[propName][1]}";
-                using namespace phosphor::logging;
-                log<level::ERR>(err.c_str());
-            }
-        % else:
-            <% assert("Unknown validation type: propName") %>\
-        % endif
-            return matched;
-        }
-    % endif
-  % endfor
-% endfor
+{
+    bool matched = false;
+    % if (validators[propName][0] == 'regex') :
+        std::regex regexToCheck("${validators[propName][1]}");
+    matched = std::regex_search(value, regexToCheck);
+    if (!matched)
+    {
+        std::string err = "Input parameter for ${propName} is invalid "
+                          "Input: " +
+                          value +
+                          " not in the format of this regex: "
+                          "${validators[propName][1]}";
+        using namespace phosphor::logging;
+        log<level::ERR>(err.c_str());
+    }
+    % elif (validators[propName][0] == 'range') :
+        <% lowhigh =
+             re.split('\.\.', validators[propName][1]) %> if ((value <=
+                                                               ${lowhigh[1]}) &&
+                                                              (value >=
+                                                               ${lowhigh[0]}))
+    {
+        matched = true;
+    }
+    else
+    {
+        std::string err = "Input parameter for ${propName} is invalid "
+                          "Input: " +
+                          std::to_string(value) +
+                          "in uint: "
+                          "${validators[propName][2]} is not in "
+                          "range:${validators[propName][1]}";
+        using namespace phosphor::logging;
+        log<level::ERR>(err.c_str());
+    }
+    % else : <% assert("Unknown validation type: propName") %> %
+             endif return matched;
+}
+% endif % endfor % endfor
 };
 
-template<class Archive>
-void save(Archive& a,
-          const Impl& setting,
-          const std::uint32_t version)
+template <class Archive>
+void save(Archive & a, const Impl& setting, const std::uint32_t version)
 {
 <%
 props = []
@@ -218,10 +222,8 @@ props = ', '.join(props)
 % endif
 }
 
-template<class Archive>
-void load(Archive& a,
-          Impl& setting,
-          const std::uint32_t version)
+template <class Archive>
+void load(Archive & a, Impl & setting, const std::uint32_t version)
 {
 <% props = [] %>\
 % for index, item in enumerate(settingsDict[object]):
@@ -231,11 +233,7 @@ void load(Archive& a,
     props.append(prop)
 %>\
     decltype(${t}) ${prop}{};
-  % endfor
-% endfor
-<% props = ', '.join(props) %>
-% if props:
-    a(${props});
+% endfor % endfor<% props = ', '.join(props) %> % if props : a(${props});
 % endif
 
 <% props = [] %>
@@ -245,56 +243,49 @@ void load(Archive& a,
     t = "setting." + NamedElement(name=prop).camelCase + "(" + prop + ")"
 %>\
     ${t};
-  % endfor
-% endfor
+% endfor % endfor
 }
 
 % for n in reversed(ns):
 } // namespace ${n}
 % endfor
 
-% endfor
+    % endfor
 
-/** @class Manager
- *
- *  @brief Compose settings objects and put them on the bus.
- */
-class Manager
+    /** @class Manager
+     *
+     *  @brief Compose settings objects and put them on the bus.
+     */
+    class Manager
 {
-    public:
-        Manager() = delete;
-        Manager(const Manager&) = delete;
-        Manager& operator=(const Manager&) = delete;
-        Manager(Manager&&) = delete;
-        Manager& operator=(Manager&&) = delete;
-        virtual ~Manager() = default;
+  public:
+    Manager() = delete;
+    Manager(const Manager&) = delete;
+    Manager& operator=(const Manager&) = delete;
+    Manager(Manager&&) = delete;
+    Manager& operator=(Manager&&) = delete;
+    virtual ~Manager() = default;
 
-        /** @brief Constructor to put settings objects on to the bus.
-         *  @param[in] bus - Bus to attach to.
-         */
-        explicit Manager(sdbusplus::bus::bus& bus) :
-            settings(
-                std::make_tuple(
-% for index, path in enumerate(objects):
-<% type = get_setting_type(path) + "::Impl" %>\
-                    std::make_unique<${type}>(
-                        bus,
-  % if index < len(settingsDict) - 1:
-                        "${path}"),
-  % else:
-                        "${path}")
-  % endif
-% endfor
-                )
-            )
-        {
+    /** @brief Constructor to put settings objects on to the bus.
+     *  @param[in] bus - Bus to attach to.
+     */
+    explicit Manager(sdbusplus::bus_t& bus) :
+        settings(
+            std::make_tuple(% for index, path in enumerate(objects)
+                            : <% type = get_setting_type(path) + "::Impl" %>
+                                  std::make_unique<${type}>(
+                                      bus, % if index < len(settingsDict) - 1
+                                      : "${path}"),
+                              % else
+                            : "${path}") %
+            endif % endfor))
+    {
 
-            fs::path path{};
+        fs::path path{};
 % for index, path in enumerate(objects):
             path = fs::path(SETTINGS_PERSIST_PATH) / "${path}";
-            path += persistent::fileSuffix;
-            auto initSetting${index} = [&]()
-            {
+path += persistent::fileSuffix;
+auto initSetting${index} = [&]() {
   % for item in settingsDict[path]:
     % for propName, metaDict in item['Properties'].items():
 <% p = NamedElement(name=propName).camelCase %>\
@@ -307,37 +298,40 @@ defaultValue = "{}::{}".format(ns[:i], defaultValue)
 %>\
 % endif
                 std::get<${index}>(settings)->
-                  ${get_setting_sdbusplus_type(item['Interface'])}::${p}(${defaultValue});
-  % endfor
+                  $
+  {
+      get_setting_sdbusplus_type(item['Interface'])
+  }
+  ::${p}(${defaultValue});
+  % endfor % endfor
+};
+
+try
+{
+    if (fs::exists(path))
+    {
+        std::ifstream is(path.c_str(), std::ios::in);
+        cereal::JSONInputArchive iarchive(is);
+        iarchive(*std::get<${index}>(settings));
+    }
+    else
+    {
+        initSetting${index}();
+    }
+}
+catch (const cereal::Exception& e)
+{
+    log<level::ERR>(e.what());
+    fs::remove(path);
+    initSetting${index}();
+}
+std::get<${index}>(settings)->emit_object_added();
+
 % endfor
-            };
+    }
 
-            try
-            {
-                if (fs::exists(path))
-                {
-                    std::ifstream is(path.c_str(), std::ios::in);
-                    cereal::JSONInputArchive iarchive(is);
-                    iarchive(*std::get<${index}>(settings));
-                }
-                else
-                {
-                    initSetting${index}();
-                }
-            }
-            catch (const cereal::Exception& e)
-            {
-                log<level::ERR>(e.what());
-                fs::remove(path);
-                initSetting${index}();
-            }
-            std::get<${index}>(settings)->emit_object_added();
-
-% endfor
-        }
-
-    private:
-        /* @brief Composition of settings objects. */
+  private:
+    /* @brief Composition of settings objects. */
         std::tuple<
 % for index, path in enumerate(objects):
 <% type = get_setting_type(path) + "::Impl" %>\
@@ -345,8 +339,7 @@ defaultValue = "{}::{}".format(ns[:i], defaultValue)
             std::unique_ptr<${type}>,
   % else:
             std::unique_ptr<${type}>> settings;
-  % endif
-% endfor
+        % endif % endfor
 };
 
 } // namespace settings
