@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     // Add sdbusplus ObjectManager. The settings objects are spread across
     // the object namespace and are not under a (settings) root. Hence register
     // "/" as the path.
-    sdbusplus::server::manager::manager objManager(bus, "/");
+    sdbusplus::server::manager_t objManager(bus, "/");
     bus.request_name(SETTINGS_BUSNAME);
 
     phosphor::settings::Manager mgr(bus);
