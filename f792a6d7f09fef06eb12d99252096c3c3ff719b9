@@ -1,0 +1,8 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+1: Andrew Geissler <andrew@geissonator.com>
+Code-Review+2: Patrick Williams <patrick@stwcx.xyz>
+Submitted-by: Patrick Williams <patrick@stwcx.xyz>
+Submitted-at: Wed, 03 Aug 2022 14:44:08 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-settingsd/+/55540
+Project: openbmc/phosphor-settingsd
+Branch: refs/heads/master
