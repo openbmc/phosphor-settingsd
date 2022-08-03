@@ -32,11 +32,11 @@
 # data within them will be kept sorted.
 
 owners:
+- anoo@us.ibm.com
 - deepak.kodihalli.83@gmail.com
+- patrick@stwcx.xyz
 
 reviewers:
-- anoo@us.ibm.com
-- vishwa@linux.vnet.ibm.com
 
 matches:
 
@@ -47,6 +47,6 @@ openbmc:
 - name: Deepak Kodihalli
   email: deepak.kodihalli.83@gmail.com
   discord: dkodihal
-- name: Vishwanatha Subbanna
-  email: vishwa@linux.vnet.ibm.com
-  discord: vishwa
+- name: Patrick Williams
+  email: patrick@stwcx.xyz
+  discord: stwcx
