@@ -28,7 +28,7 @@
               Default: '"00:00:00:00:00:00"'
               Validation:
                   Type: "regex"
-                  Validator: '^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$'
+                  Validator: "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$"
 
 /xyz/openbmc_project/control/host0/power_cap:
     - Interface: xyz.openbmc_project.Control.Power.Cap
@@ -40,7 +40,7 @@
                   Validator: "0..1000"
                   Unit: "Watts"
           PowerCapEnable:
-               Default: 'false'
+              Default: "false"
 
 # This interface also ends in Mode and sets an enum.
 /xyz/openbmc_project/control/power_mode:

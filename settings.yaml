@@ -69,7 +69,6 @@ org.openbmc.settings.Host:
         keyregex: "host"
         subtree: "/org/openbmc/control"
         matchregex: "control/(host\\d*)$"
-
 # Example of using regex
 #    macaddress:
 #        name: mac_address
