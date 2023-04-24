@@ -5,7 +5,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
 
-int main(int argc, char* argv[])
+int main(int argc __attribute__((unused)), char* argv[] __attribute__((unused)))
 {
     auto bus = sdbusplus::bus::new_default();
 

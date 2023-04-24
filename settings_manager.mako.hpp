@@ -178,7 +178,11 @@ class Impl : public Parent
             }
         % elif (validators[propName][0] == 'range'):
 <% lowhigh = re.split('\.\.', validators[propName][1]) %>\
+        % if lowhigh[0] == '0':
+            if (value <= ${lowhigh[1]})
+        % else:
             if ((value <= ${lowhigh[1]}) && (value >= ${lowhigh[0]}))
+        % endif
             {
                 matched = true;
             }
@@ -203,7 +207,7 @@ class Impl : public Parent
 template<class Archive>
 void save(Archive& a,
           const Impl& setting,
-          const std::uint32_t version)
+          const std::uint32_t version __attribute__((unused)))
 {
 <%
 props = []
@@ -221,7 +225,7 @@ props = ', '.join(props)
 template<class Archive>
 void load(Archive& a,
           Impl& setting,
-          const std::uint32_t version)
+          const std::uint32_t version __attribute__((unused)))
 {
 <% props = [] %>\
 % for index, item in enumerate(settingsDict[object]):
