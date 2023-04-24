@@ -1,0 +1,6 @@
+option(
+    'settings_yaml',
+    type: 'string',
+    value: 'settings_example.yaml',
+    description: 'Path to settings yaml',
+)
