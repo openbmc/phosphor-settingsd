@@ -16,6 +16,24 @@
       "message": "Since this is C++, I\u0027d prefer one of three options:\n\n```\nint main();\nint main(int /* argc */, char** /* argv */);\nint main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]);\n```",
       "revId": "c8bcc0b133a60224b84c53eb223b71eda43ae6d3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5624036_44f08f5e",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-24T19:28:24Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "75b154d2_2e01ace8",
+      "revId": "c8bcc0b133a60224b84c53eb223b71eda43ae6d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
