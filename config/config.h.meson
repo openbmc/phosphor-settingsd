@@ -1,0 +1,7 @@
+#pragma once
+#include <cstddef>
+
+#define SETTINGS_BUSNAME "xyz.openbmc_project.Settings"
+#define SETTINGS_PERSIST_PATH "/var/lib/phosphor-settings-manager/settings"
+
+static constexpr size_t CLASS_VERSION = 1;
