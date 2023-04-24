@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a322753f_e1832455",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "CI failure was due to a missing header file, which seems left over from autotools:\n\n```\nFAILED: phosphor-settings-manager.p/settings_main.cpp.o \nc++ -Iphosphor-settings-manager.p -I. -I.. -I/usr/local/include -fdiagnostics-color\u003dnever -D_FILE_OFFSET_BITS\u003d64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std\u003dc++20 -O0 -g -DBOOST_ASIO_DISABLE_THREADS -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED -DBOOST_ERROR_CODE_HEADER_ONLY -DBOOST_COROUTINES_NO_DEPRECATION_WARNING -MD -MQ phosphor-settings-manager.p/settings_main.cpp.o -MF phosphor-settings-manager.p/settings_main.cpp.o.d -o phosphor-settings-manager.p/settings_main.cpp.o -c ../settings_main.cpp\n../settings_main.cpp:1:10: fatal error: config.h: No such file or directory\n    1 | #include \"config.h\"\n```\n\nYou probably need to \u0027un-configure\u0027 these options in autotools in order to be able to drop the config.h?",
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae2a9988_ef1c5a69",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "Pretty sure none of this is needed by this repository.  Just the sdbusplus_dep line.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09569d1c_a6ffdaf7",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "nit: prefer this on its own line",
+      "range": {
+        "startLine": 44,
+        "startChar": 29,
+        "endLine": 44,
+        "endChar": 67
+      },
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6d7cb17_3d2ac873",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "What is this used for?",
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4d5631a_7ec4d0d9",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "nit: prefer this on its own line.",
+      "range": {
+        "startLine": 68,
+        "startChar": 11,
+        "endLine": 68,
+        "endChar": 39
+      },
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74b396e7_898646f8",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer the order swapped on these.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 24
+      },
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd39cc85_d519e03a",
+        "filename": "subprojects/cereal.wrap",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "Probably can drop this comment.",
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecdee522_a0db0eb8",
+        "filename": "subprojects/sdbusplus.wrap",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-24T14:45:18Z",
+      "side": 1,
+      "message": "Probably isn\u0027t needed by this repository but it is fine if you want to add it.",
+      "revId": "e675eb56761399cfb6a8ab6584ab073b73e2418d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
