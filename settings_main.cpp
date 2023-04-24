@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "settings_manager.hpp"
 
 #include <sdbusplus/bus.hpp>

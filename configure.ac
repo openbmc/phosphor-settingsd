@@ -21,26 +21,9 @@ LT_INIT
 AX_CXX_COMPILE_STDCXX([20], [noext])
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror], [CXXFLAGS])
 
-AC_ARG_VAR(SETTINGS_BUSNAME, [The Dbus busname to own])
-AS_IF([test "x$SETTINGS_BUSNAME" == "x"],\
-    [SETTINGS_BUSNAME="xyz.openbmc_project.Settings"])
-AC_DEFINE_UNQUOTED([SETTINGS_BUSNAME], ["$SETTINGS_BUSNAME"],\
-    [The DBus busname to own])
-
 AS_IF([test "x$SETTINGS_YAML" == "x"], [SETTINGS_YAML="settings_example.yaml"])
 SETTINGSGEN="$PYTHON $srcdir/settings.py -i $SETTINGS_YAML"
 AC_SUBST(SETTINGSGEN)
-
-AC_ARG_VAR(SETTINGS_PERSIST_PATH, \
-    [Path of directory housing persisted settings.])
-AS_IF([test "x$SETTINGS_PERSIST_PATH" == "x"], \
-    [SETTINGS_PERSIST_PATH="/var/lib/phosphor-settings-manager/settings"])
-AC_DEFINE_UNQUOTED([SETTINGS_PERSIST_PATH], ["$SETTINGS_PERSIST_PATH"], \
-    [Path of directory housing persisted settings])
-
-AC_ARG_VAR(CLASS_VERSION, [Class version to register with Cereal])
-AS_IF([test "x$CLASS_VERSION" == "x"], [CLASS_VERSION=1])
-AC_DEFINE_UNQUOTED([CLASS_VERSION], [$CLASS_VERSION], [Class version to register with Cereal])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

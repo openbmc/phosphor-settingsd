@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/USCiLab/cereal.git
+revision = HEAD
+
+[provide]
+cereal = cereal_dep

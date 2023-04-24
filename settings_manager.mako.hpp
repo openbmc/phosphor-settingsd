@@ -42,9 +42,16 @@ def get_setting_type(path):
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include "config.h"
 #include <xyz/openbmc_project/Common/error.hpp>
 using namespace phosphor::logging;
+
+/* The DBus busname to own */
+#define SETTINGS_BUSNAME "xyz.openbmc_project.Settings"
+/* Path of directory housing persisted settings */
+#define SETTINGS_PERSIST_PATH "/var/lib/phosphor-settings-manager/settings"
+
+/* Class version to register with Cereal */
+static constexpr size_t CLASS_VERSION = 1;
 
 % for i in set(sdbusplus_includes):
 #include "${i}"
