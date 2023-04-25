@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e87bf62_d67037b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-25T21:13:06Z",
+      "side": 1,
+      "message": "Addressed comments. Thanks",
+      "revId": "54ea345a8c0ceb71e2d0eaed15e383cdc1949279",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5fca187_a90ded0d",
@@ -31,6 +48,24 @@
       "writtenOn": "2023-04-25T19:55:20Z",
       "side": 1,
       "message": "See https://mesonbuild.com/Configuration.html .  The \u0027configure_file\u0027 on its own should work without any special `command`.  I don\u0027t think you should even need to add the dependency.",
+      "revId": "54ea345a8c0ceb71e2d0eaed15e383cdc1949279",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36abaac9_0e528351",
+        "filename": "config/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-25T21:13:06Z",
+      "side": 1,
+      "message": "Dropped the dependency.\nBut without providing a command, configure fails with following error.  Looks like use of just copy is also obsolete and causes a warning, hence i used command.\n\nconfig/meson.build:2:0: ERROR: Must specify an action with one of these keyword arguments: \u0027configuration\u0027, \u0027command\u0027, or \u0027copy\u0027.",
+      "parentUuid": "c5fca187_a90ded0d",
       "revId": "54ea345a8c0ceb71e2d0eaed15e383cdc1949279",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
