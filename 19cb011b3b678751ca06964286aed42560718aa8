@@ -16,6 +16,24 @@
       "message": "Something seems wrong if we have to do this.  I think this is partially why the `cp` isn\u0027t great... It might be putting things into the source tree instead of the build tree.\n\nSorry to go back and forth on this.  Looking at bmcweb as an example maybe you had it closer the first time?\n\nhttps://github.com/openbmc/bmcweb/blob/02e01b5108d46720a0b438c0d79952464320d954/config/meson.build#L19",
       "revId": "19cb011b3b678751ca06964286aed42560718aa8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af9530d9_df6a4400",
+        "filename": "config/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-26T19:09:49Z",
+      "side": 1,
+      "message": "As we discussed, removed the usage of config.h, so we don\u0027t need this anymore.",
+      "parentUuid": "e4ff93c5_93b7ee92",
+      "revId": "19cb011b3b678751ca06964286aed42560718aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

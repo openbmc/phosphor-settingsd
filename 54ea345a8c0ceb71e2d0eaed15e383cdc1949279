@@ -86,6 +86,24 @@
       "parentUuid": "36abaac9_0e528351",
       "revId": "54ea345a8c0ceb71e2d0eaed15e383cdc1949279",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8426dcb_5733b476",
+        "filename": "config/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-26T19:09:49Z",
+      "side": 1,
+      "message": "As we discussed, removed the usage of config.h, so we don\u0027t need this anymore.",
+      "parentUuid": "024805e6_cac8c96c",
+      "revId": "54ea345a8c0ceb71e2d0eaed15e383cdc1949279",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
