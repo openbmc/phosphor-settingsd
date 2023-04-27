@@ -16,6 +16,24 @@
       "message": "Please clean up the .gitignore too.  I would expect it to end up looking like this after meson is added and autotools removed:\n\n```\n$ cat .gitignore             \nbuild*/\nsubprojects/*\n!subprojects/*.wrap\n```",
       "revId": "bdf3e007ea08162bc96ecaa4ddb6303581f7029d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40de2198_248e5000",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-27T16:48:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7f4ba16f_547acb82",
+      "revId": "bdf3e007ea08162bc96ecaa4ddb6303581f7029d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
