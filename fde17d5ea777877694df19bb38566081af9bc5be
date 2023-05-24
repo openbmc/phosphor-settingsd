@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f2fab16_f31c4c83",
+        "filename": "settings_manager.mako.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-24T20:53:54Z",
+      "side": 1,
+      "message": "Suggest combineing this with the stuff on line ~153 to make a single function for serializing to a file.",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 72
+      },
+      "revId": "fde17d5ea777877694df19bb38566081af9bc5be",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
