@@ -96,6 +96,14 @@ constexpr auto fileSuffix = "__";
 
 }
 
+static fs::path getFilePath(const fs::path& objectPath)
+{
+    fs::path p(SETTINGS_PERSIST_PATH);
+    p /= objectPath.relative_path();
+    p += persistent::fileSuffix;
+    return p;
+}
+
 % for object in objects:
 <%
    ns = object.split('/')
@@ -137,6 +145,47 @@ class Impl : public Parent
         }
         virtual ~Impl() = default;
 
+        void setInitialVersion(std::uint32_t v)
+        {
+            initialVersion = v;
+        }
+
+        std::uint32_t getInitialVersion() const
+        {
+            return initialVersion;
+        }
+
+        bool deserialize()
+        {
+            auto p = getFilePath(path);
+            if (fs::exists(p))
+            {
+                std::ifstream is(p.c_str(), std::ios::in);
+                cereal::JSONInputArchive iarchive(is);
+                iarchive(*this);
+                return true;
+            }
+            return false;
+        }
+
+        void serialize()
+        {
+            auto p = getFilePath(path);
+            if (!fs::exists(p.parent_path()))
+            {
+                fs::create_directories(p.parent_path());
+            }
+            std::ofstream os(p.c_str(), std::ios::binary);
+            cereal::JSONOutputArchive oarchive(os);
+            oarchive(*this);
+        }
+
+        void removeFile() const
+        {
+            std::error_code ec;
+            fs::remove(getFilePath(path), ec);
+        }
+
 % for index, item in enumerate(settingsDict[object]):
     % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
@@ -163,14 +212,8 @@ class Impl : public Parent
                     return result;
                 }
              % endif
-                fs::path p(SETTINGS_PERSIST_PATH);
-                p /= path.relative_path();
-                p += persistent::fileSuffix;
-                fs::create_directories(p.parent_path());
-                std::ofstream os(p.c_str(), std::ios::binary);
-                cereal::JSONOutputArchive oarchive(os);
                 result = Iface${index}::${t}(value);
-                oarchive(*this);
+                serialize();
             }
             return result;
         }
@@ -180,6 +223,7 @@ class Impl : public Parent
 % endfor
     private:
         fs::path path;
+        std::uint32_t initialVersion = 0;
 % for index, item in enumerate(settingsDict[object]):
   % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
@@ -259,6 +303,7 @@ void load(Archive& a,
           Impl& setting,
           const std::uint32_t version)
 {
+    setting.setInitialVersion(version);
 <%
 props = []
 for index, item in enumerate(settingsDict[object]):
@@ -340,12 +385,7 @@ class Manager
                 )
             )
         {
-
-            fs::path path{};
 % for index, path in enumerate(objects):
-<% relativePath = path[1:] %>\
-            path = fs::path(SETTINGS_PERSIST_PATH) / "${relativePath}";
-            path += persistent::fileSuffix;
             auto initSetting${index} = [&]()
             {
   % for item in settingsDict[path]:
@@ -360,11 +400,13 @@ class Manager
 
             try
             {
-                if (fs::exists(path))
+                if (std::get<${index}>(settings)->deserialize())
                 {
-                    std::ifstream is(path.c_str(), std::ios::in);
-                    cereal::JSONInputArchive iarchive(is);
-                    iarchive(*std::get<${index}>(settings));
+                    /* Update the archive to use name/value pairs if it isn't. */
+                    if (std::get<${index}>(settings)->getInitialVersion() < CLASS_VERSION_WITH_NVP)
+                    {
+                        std::get<${index}>(settings)->serialize();
+                    }
                 }
                 else
                 {
@@ -374,7 +416,7 @@ class Manager
             catch (const cereal::Exception& e)
             {
                 log<level::ERR>(e.what());
-                fs::remove(path);
+                std::get<${index}>(settings)->removeFile();
                 initSetting${index}();
             }
             std::get<${index}>(settings)->emit_object_added();
