@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0e8fd98_2550913d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-24T20:50:26Z",
+      "side": 1,
+      "message": "Should we add `Resolves openbmc/phosphor-settingsd#16.` in here somewhere?",
+      "revId": "db838ff7e0ba81f5175f9729095b1aa07b27c882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6c0f0c0_4f6e78d1",
+        "filename": "settings_manager.mako.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-24T20:50:26Z",
+      "side": 1,
+      "message": "Instead of loading the properties one at a time, did you consider loading using a `map\u003cstring, PropertiesVariant\u003e`?  I guess you said this method is backwards compatible?",
+      "revId": "db838ff7e0ba81f5175f9729095b1aa07b27c882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36331693_78c4e877",
+        "filename": "settings_manager.mako.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-24T20:50:26Z",
+      "side": 1,
+      "message": "I assume we\u0027re expecting this to be rare after the first load?  There isn\u0027t any way to check if the entity exists?",
+      "range": {
+        "startLine": 284,
+        "startChar": 0,
+        "endLine": 285,
+        "endChar": 9
+      },
+      "revId": "db838ff7e0ba81f5175f9729095b1aa07b27c882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47b292df_c00d7ae6",
+        "filename": "settings_manager.mako.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-24T20:50:26Z",
+      "side": 1,
+      "message": "lg2?\n\nWe\u0027re already using log\u003clevel::ERR\u003e elsewhere in this file so we might as well use the lg2 interfaces instead of cerr.",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 287,
+        "endChar": 55
+      },
+      "revId": "db838ff7e0ba81f5175f9729095b1aa07b27c882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
