@@ -66,7 +66,8 @@ using namespace phosphor::logging;
 #define SETTINGS_PERSIST_PATH "/var/lib/phosphor-settings-manager/settings"
 
 /* Class version to register with Cereal */
-static constexpr size_t CLASS_VERSION = 1;
+static constexpr size_t CLASS_VERSION = 2;
+static constexpr size_t CLASS_VERSION_WITH_NVP = 2;
 
 % for i in set(sdbusplus_includes):
 #include "${i}"
@@ -234,34 +235,63 @@ void save(Archive& a,
 <%
 props = []
 for index, item in enumerate(settingsDict[object]):
-    intfProps = ["setting." + NamedElement(name=propName).camelCase + "()" for \
-                    propName, metaDict in item['Properties'].items()]
-    props.extend(intfProps)
-props = ', '.join(props)
+    props.extend(item['Properties'].keys())
 %>\
-% if props:
-    a(${props});
-% endif
+## Since the iface isn't saved, property names need to be unique on
+## the object path.  This could be supported by providing unique
+## field names to make_nvp() if ever necessary.
+% if len(set(props)) != len(props):
+#error Duplicate property names on object path ${object}
+%endif
+<%
+args = []
+for prop in props:
+    t = "setting." + NamedElement(name=prop).camelCase + "()"
+    args.append(f"cereal::make_nvp(\"{prop}\", {t})")
+args = ", ".join(args)
+%>\
+    a(${args});
 }
 
 template<class Archive>
 void load(Archive& a,
           Impl& setting,
-          [[maybe_unused]] const std::uint32_t version)
+          const std::uint32_t version)
 {
 <% props = [] %>\
 % for index, item in enumerate(settingsDict[object]):
   % for  prop, metaDict in item['Properties'].items():
 <%
-    t = "setting." + NamedElement(name=prop).camelCase + "()"
-    props.append(prop)
+props = []
+for index, item in enumerate(settingsDict[object]):
+    for prop in item['Properties'].keys():
+        t = "setting." + NamedElement(name=prop).camelCase + "()"
+        props.append({'prop' : prop, 'iface': item['Interface'], 'func': t})
 %>\
-    decltype(${t}) ${prop}{};
-  % endfor
+% for p in props:
+    decltype(${p['func']}) ${p['prop']}{};
 % endfor
-<% props = ', '.join(props) %>
-% if props:
-    a(${props});
+<% propList = ', '.join([p['prop'] for p in props]) %>
+% if propList:
+    if (version < CLASS_VERSION_WITH_NVP)
+    {
+        a(${propList});
+    }
+    else
+    {
+    % for p in props:
+        try
+        {
+            a(CEREAL_NVP(${p['prop']}));
+        }
+        catch (const cereal::Exception& e)
+        {
+            std::cerr << "Could not restore property ${p['prop']} on ${object}, "
+                      << "setting to default value.\n";
+            ${p['prop']} = ${get_default_value(object, p['iface'], p['prop'])};
+        }
+    % endfor
+    }
 % endif
 
 <% props = [] %>
