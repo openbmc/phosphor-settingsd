@@ -20,6 +20,21 @@ def get_setting_type(path):
     path = path[1:]
     path = path.replace('/', '::')
     return path
+
+def get_default_value(object, interface, prop):
+    default_value = None
+    for item in settingsDict[object]:
+        if item['Interface'] == interface:
+            default_value = item['Properties'][prop]['Default']
+            break
+
+    if isinstance(default_value, str) and  not \
+        default_value.startswith('"') and '::' in default_value:
+            ns = get_setting_sdbusplus_type(interface)
+            i = ns.rfind('::')
+            default_value = "{}::{}".format(ns[:i], default_value)
+
+    return default_value
 %>\
 #pragma once
 
@@ -310,14 +325,7 @@ class Manager
   % for item in settingsDict[path]:
     % for propName, metaDict in item['Properties'].items():
 <% p = NamedElement(name=propName).camelCase %>\
-<% defaultValue = metaDict['Default'] %>\
-% if isinstance(defaultValue, str) and  not \
-    defaultValue.startswith('"') and '::' in defaultValue:
-<% ns = get_setting_sdbusplus_type(item['Interface'])
-i = ns.rfind('::')
-defaultValue = "{}::{}".format(ns[:i], defaultValue)
-%>\
-% endif
+<% defaultValue = get_default_value(path, item['Interface'], propName) %>\
                 std::get<${index}>(settings)->
                   ${get_setting_sdbusplus_type(item['Interface'])}::${p}(${defaultValue});
   % endfor
