@@ -136,6 +136,16 @@ class Impl : public Parent
         }
         virtual ~Impl() = default;
 
+        void setInitialVersion(std::uint32_t v)
+        {
+            initialVersion = v;
+        }
+
+        std::uint32_t getInitialVersion() const
+        {
+            return initialVersion;
+        }
+
 % for index, item in enumerate(settingsDict[object]):
     % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
@@ -179,6 +189,7 @@ class Impl : public Parent
 % endfor
     private:
         fs::path path;
+        std::uint32_t initialVersion = 0;
 % for index, item in enumerate(settingsDict[object]):
   % for propName, metaDict in item['Properties'].items():
 <% t = NamedElement(name=propName).camelCase %>\
@@ -258,6 +269,7 @@ void load(Archive& a,
           Impl& setting,
           const std::uint32_t version)
 {
+    setting.setInitialVersion(version);
 <%
 props = []
 for index, item in enumerate(settingsDict[object]):
@@ -365,6 +377,15 @@ class Manager
                     std::ifstream is(path.c_str(), std::ios::in);
                     cereal::JSONInputArchive iarchive(is);
                     iarchive(*std::get<${index}>(settings));
+                    is.close();
+
+                    /* Update the archive to use name/value pairs if it isn't. */
+                    if (std::get<${index}>(settings)->getInitialVersion() < CLASS_VERSION_WITH_NVP)
+                    {
+                        std::ofstream os(path.c_str(), std::ios::binary);
+                        cereal::JSONOutputArchive oarchive(os);
+                        oarchive(*(std::get<${index}>(settings).get()));
+                    }
                 }
                 else
                 {
