@@ -56,10 +56,8 @@ def get_default_value(object, interface, prop):
 #include <regex>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
-using namespace phosphor::logging;
 
 /* The DBus busname to own */
 #define SETTINGS_BUSNAME "xyz.openbmc_project.Settings"
@@ -238,11 +236,9 @@ class Impl : public Parent
             matched = std::regex_search(value, regexToCheck);
             if (!matched)
             {
-                std::string err = "Input parameter for ${propName} is invalid "
-                    "Input: " + value + " not in the format of this regex: "
-                    "${validators[propName][1]}";
-                using namespace phosphor::logging;
-                log<level::ERR>(err.c_str());
+                lg2::error("Input parameter for ${propName} is invalid. "
+                           "Input '{VALUE}' not in the format of this regex: "
+                           "${validators[propName][1]}", "VALUE", value);
             }
         % elif (validators[propName][0] == 'range'):
 <% lowhigh = re.split('\.\.', validators[propName][1]) %>\
@@ -256,11 +252,10 @@ class Impl : public Parent
             }
             else
             {
-                std::string err = "Input parameter for ${propName} is invalid "
-                    "Input: " + std::to_string(value) + "in uint: "
-                    "${validators[propName][2]} is not in range:${validators[propName][1]}";
-                using namespace phosphor::logging;
-                log<level::ERR>(err.c_str());
+                lg2::error("Input parameter for ${propName} is invalid. "
+                           "Input '{VALUE}' with unit '${validators[propName][2]}' "
+                           "is not in range ${validators[propName][1]}",
+                           "VALUE", std::to_string(value));
             }
         % else:
             <% assert("Unknown validation type: propName") %>\
@@ -415,7 +410,7 @@ class Manager
             }
             catch (const cereal::Exception& e)
             {
-                log<level::ERR>(e.what());
+                lg2::error("Cereal exception on ${path}: {ERROR}", "ERROR", e);
                 std::get<${index}>(settings)->removeFile();
                 initSetting${index}();
             }
