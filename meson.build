@@ -1,10 +1,10 @@
 project('phosphor-settingsd', 'cpp',
   version: '1.0',
-  meson_version: '>=0.58.0',
+  meson_version: '>=1.1.1',
   default_options: [
     'warning_level=3',
     'werror=true',
-    'cpp_std=c++20',
+    'cpp_std=c++23',
   ]
 )
 cpp = meson.get_compiler('cpp')
