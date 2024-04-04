@@ -12,7 +12,7 @@ cpp = meson.get_compiler('cpp')
 python_prog = find_program('python3', native: true)
 
 # Define dependencies
-sdbusplus_dep = dependency('sdbusplus')
+sdbusplus_dep = dependency('sdbusplus', required : false)
 phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
 phosphor_logging_dep = dependency('phosphor-logging')
 cereal_dep = dependency('cereal', required: false)
@@ -33,6 +33,13 @@ if not has_cereal
 endif
 
 # Generate settings_manager.hpp
+settings_gen_env = {}
+if not sdbusplus_dep.found()
+    sdbusplus_proj = subproject('sdbusplus')
+    sdbusplus_dep = sdbusplus_proj.get_variable('sdbusplus_dep')
+    settings_gen_env = {'PYTHONPATH': meson.current_source_dir() / 'subprojects' / 'sdbusplus' / 'tools'}
+endif
+
 settings_gen = custom_target(
     'settings_manager.hpp'.underscorify(),
     input: [
@@ -42,6 +49,7 @@ settings_gen = custom_target(
     ],
     output: 'settings_manager.hpp',
     command: [ python_prog, '@INPUT0@', '-i', '@INPUT2@' ],
+    env: settings_gen_env,
 )
 
 # Generate daemon
