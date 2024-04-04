@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cae92c35_f81b7179",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-04-04T15:02:14Z",
+      "side": 1,
+      "message": "```\ngeneric-dictionary - misspelling count \u003e\u003e /tmp/tmp.30HKcLTRZV:1: taget \u003d\u003d\u003e target\n```",
+      "range": {
+        "startLine": 7,
+        "startChar": 43,
+        "endLine": 7,
+        "endChar": 48
+      },
+      "revId": "0e5f8afa026a852af546dee326235a0aa58d6581",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
