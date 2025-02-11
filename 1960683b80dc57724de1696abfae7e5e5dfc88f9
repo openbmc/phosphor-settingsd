@@ -1,0 +1,7 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: Adriana Kobylak <anoo@us.ibm.com>
+Submitted-by: Adriana Kobylak <anoo@us.ibm.com>
+Submitted-at: Tue, 11 Feb 2025 19:27:06 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-settingsd/+/77680
+Project: openbmc/phosphor-settingsd
+Branch: refs/heads/master
