@@ -33,6 +33,18 @@ def get_default_value(object, interface, prop):
             ns = get_setting_sdbusplus_type(interface)
             i = ns.rfind('::')
             default_value = "{}::{}".format(ns[:i], default_value)
+            return default_value
+
+    # Handle default values for properties of type array[enum].
+    if isinstance(default_value, list):
+        ns = get_setting_sdbusplus_type(interface)
+        i = ns.rfind('::')
+        elems = []
+        for val in default_value:
+            if isinstance(val, str) and not val.startswith('"') and '::' in val:
+                elems.append("{}::{}".format(ns[:i], val))
+        default_value = '{' + ', '.join(elems) + '}'
+        return default_value
 
     return default_value
 %>\
