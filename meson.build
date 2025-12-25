@@ -48,7 +48,7 @@ settings_gen = custom_target(
     'settings_manager.hpp'.underscorify(),
     input: [
         'settings.py',
-        'settings_manager.mako.hpp',
+        'settings_manager.hpp.mako',
         get_option('settings_yaml'),
     ],
     output: 'settings_manager.hpp',

@@ -25,7 +25,7 @@ def main():
         yamlDict = yaml.safe_load(fd)
 
         # Render the mako template
-        template = os.path.join(script_dir, "settings_manager.mako.hpp")
+        template = os.path.join(script_dir, "settings_manager.hpp.mako")
         t = Template(filename=template)
         with open("settings_manager.hpp", "w") as fd:
             fd.write(t.render(settingsDict=yamlDict))
