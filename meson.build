@@ -11,6 +11,7 @@ python_prog = find_program('python3', native: true)
 
 # Define dependencies
 sdbusplus_dep = dependency('sdbusplus', required: false)
+sdeventplus_dep = dependency('sdeventplus')
 phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
 phosphor_logging_dep = dependency('phosphor-logging')
 cereal_dep = dependency('cereal', required: false)
@@ -62,6 +63,7 @@ settings_manager_sources = [settings_gen]
 settings_manager_deps = [
     cereal_dep,
     sdbusplus_dep,
+    sdeventplus_dep,
     phosphor_dbus_interfaces_dep,
     phosphor_logging_dep,
 ]
