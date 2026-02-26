@@ -1,7 +1,12 @@
 #include "settings_manager.hpp"
 
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
+#include <sdeventplus/event.hpp>
+#include <sdeventplus/source/signal.hpp>
+
+#include <csignal>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
@@ -15,11 +20,38 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     phosphor::settings::Manager mgr(bus);
 
-    while (true)
+    // Attach the D-Bus connection to sd-event loop.
+    auto event = sdeventplus::Event::get_default();
+    bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
+
+    // Block SIGHUP so the kernel holds it as pending instead of applying the
+    // default action.
+    sigset_t ss;
+    if (sigemptyset(&ss) < 0 || sigaddset(&ss, SIGHUP) < 0)
     {
-        bus.process_discard();
-        bus.wait();
+        lg2::error("Failed to setup signal mask");
+        return 1;
+    }
+    if (sigprocmask(SIG_BLOCK, &ss, nullptr) < 0)
+    {
+        lg2::error("Failed to block SIGHUP signal");
+        return 1;
     }
 
-    return 0;
+    sdeventplus::source::Signal sighupHandler(
+        event, SIGHUP,
+        [&mgr](sdeventplus::source::Signal&, const struct signalfd_siginfo*) {
+            lg2::info("Received SIGHUP signal, reloading settings");
+            try
+            {
+                mgr.reloadAllSettings();
+            }
+            catch (const std::exception& e)
+            {
+                lg2::error("Failed to reload settings: {ERROR}", "ERROR", e);
+            }
+        });
+
+    // Run the event loop
+    return event.loop();
 }

@@ -195,6 +195,23 @@ class Impl : public Parent
             std::error_code ec;
             fs::remove(getFilePath(path), ec);
         }
+        /** @brief Reload properties from persistent storage
+         *  @details Reads the persisted settings from filesystem and updates
+         *           the D-Bus properties. This is used when SIGHUP is received
+         *           to reload configuration from disk.
+         */
+        void reloadProperties()
+        {
+            if (deserialize())
+            {
+                lg2::debug("Reloaded properties for ${object}");
+            }
+            else
+            {
+                lg2::debug("No persistent file found for ${object}, skipping reload");
+            }
+        }
+
 
 % for index, item in enumerate(settingsDict[object]):
     % for propName, metaDict in item['Properties'].items():
@@ -430,6 +447,28 @@ class Manager
 
 % endfor
         }
+        /** @brief Reload all settings from persistent storage
+         *
+         *         Iterates through all settings objects and reloads their
+         *         properties from the filesystem.
+         */
+        void reloadAllSettings()
+        {
+            lg2::info("Reloading settings from persistent storage");
+% for index, path in enumerate(objects):
+            try
+            {
+                std::get<${index}>(settings)->reloadProperties();
+            }
+            catch (const std::exception& e)
+            {
+                lg2::error("Failed to reload settings for ${path}: {ERROR}",
+                          "ERROR", e);
+            }
+% endfor
+            lg2::info("Settings reloaded successfully");
+        }
+
 
     private:
         /* @brief Composition of settings objects. */
