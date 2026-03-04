@@ -146,6 +146,24 @@
       "parentUuid": "87a3374b_f2cd3e4c",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5051f60_45ba2b5f",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2026-03-04T15:51:15Z",
+      "side": 1,
+      "message": "Sure, but I\u0027m not OK with silently breaking people and not finding out about it until I hear about it in a customer\u0027s data center.  So at the very least some due diligence would need to be done.",
+      "parentUuid": "c2dd0429_9a8ea87d",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
