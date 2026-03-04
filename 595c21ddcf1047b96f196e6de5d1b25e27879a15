@@ -128,6 +128,24 @@
       "parentUuid": "75b7000a_2dbccf2e",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2dd0429_9a8ea87d",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-04T15:45:13Z",
+      "side": 1,
+      "message": "Hold up... requesting the name after the manager is created actually the _correct_ behavior.  You\u0027re not suppose to emit \"InterfacesAdded\" signals on startup.",
+      "parentUuid": "87a3374b_f2cd3e4c",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
