@@ -182,6 +182,24 @@
       "parentUuid": "f5051f60_45ba2b5f",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d4c5b91_9b89196a",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-04T20:49:20Z",
+      "side": 1,
+      "message": "Since settingsd can potentially create _any_ object in various machine-specific YAML deployments, I\u0027m not sure how we could ever test that we wouldn\u0027t break someone.  Do you have a proposed way to test that?  What kind of due-diligence are you looking for?\n\nI\u0027m not of the opinion we should stop making changes because it _might_ break someone; especially changes that are moving the codebase towards more-correctness.  That\u0027s what testing is for.",
+      "parentUuid": "655899b1_e7ee027f",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
