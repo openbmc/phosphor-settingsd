@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1995dd41_032f1e0f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-03-04T12:27:30Z",
+      "side": 1,
+      "message": "Yes, using `sd_notify()` or a `D-Bus` method would allow implementing reload in a synchronous manner. However, at present, I couldn’t find any use case that requires synchronous reload .\n\nRegarding `sd_notify()`, adopting it would require changing the service from `Type\u003ddbus` to either `Type\u003dnotify or Type\u003dnotify-reload`, since systemd does not support multiple Type\u003d modes. Switching away from the current type Type\u003ddbus would alter how readiness is tracked. Currently, systemd considers the service ready once the D-Bus name is acquired. With `Type\u003dnotify/Type\u003dnotify-reload`, we would need to explicitly send `sd_notify(\"READY\u003d1\")` after acquiring the D-Bus name.Also, Type\u003ddbus implicitly manages D-Bus-related ordering and dependencies. Moving away from it would require explicitly specifying those dependencies in the service file.\n\nAnd regarding `D-Bus-based mechanism`, we currently do not have an PDI to implement reload mechanism and hence I had proposed a PDI for the same sometime back and the feedback was since no synchronous reload is required, and systemd-based signaling satisfies the current need, using a signal-based reload is simple and sufficient. Attaching reference for the PDI patch : https://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/83048\n\nBased on these considerations, the SIGHUP based approach was chosen.",
+      "parentUuid": "5ea68411_6503d32f",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 28
+      },
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6f63b0c1_b978aa8c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ca6fe7d2_1aaa1697",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-03-04T12:27:30Z",
+      "side": 1,
+      "message": "ok will update.",
+      "parentUuid": "6f63b0c1_b978aa8c",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 3
+      },
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75b7000a_2dbccf2e",
         "filename": "settings_main.cpp",
         "patchSetId": 1
@@ -60,6 +108,24 @@
       "writtenOn": "2026-03-03T18:07:55Z",
       "side": 1,
       "message": "With requesting the name now being done after the Manager is created, you could be changing the d-bus signals emitted on startup, which some applications could be depending on to work properly.",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87a3374b_f2cd3e4c",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-03-04T12:27:30Z",
+      "side": 1,
+      "message": "Yeah agree, Will update.\nThanks.",
+      "parentUuid": "75b7000a_2dbccf2e",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
