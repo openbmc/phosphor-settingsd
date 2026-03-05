@@ -218,6 +218,24 @@
       "parentUuid": "7d4c5b91_9b89196a",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13824190_6b039114",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-05T16:08:33Z",
+      "side": 1,
+      "message": "We can double check if any processes are doing watches on the xyz.openbmc_project.Settings bus name (which I hope they\u0027re not) but I don\u0027t think that provides much coverage on the concern.\n\nSince settingsd can implement any dbus object defined in phosphor-dbus-interfaces, someone could do something crazy like have a YAML file that implements xyz.openbmc_project.Inventory.Item.NetworkInterface, which phosphor-networkd is watching for MAC address changes.  I don\u0027t know how we check every daemon for \"are they doing the right set of handling not only InterfaceAdded but also NameAcquired (in order to follow up with mapper(?) to see if new objects they\u0027re trying to observe have shown up).",
+      "parentUuid": "96261c72_785ba049",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
