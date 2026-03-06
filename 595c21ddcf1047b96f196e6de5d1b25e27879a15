@@ -254,6 +254,24 @@
       "parentUuid": "13824190_6b039114",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7a6c5fc_77921cfe",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2026-03-06T15:43:50Z",
+      "side": 1,
+      "message": "I just remembered phosphor-logging, I\u0027ve had code for over 6 years now that tries a settings read and adds IA and PC changes, and since phosphor-logging is dbus activated I imagine it can run before settings is up.\n\nin hindsight I wish I never used settings for anything and just hosted it myself, but alas.",
+      "parentUuid": "9e25529c_3178ee75",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
