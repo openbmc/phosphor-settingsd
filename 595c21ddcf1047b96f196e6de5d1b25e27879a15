@@ -272,6 +272,41 @@
       "parentUuid": "9e25529c_3178ee75",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12ea0cd5_2d95ea7e",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000427
+      },
+      "writtenOn": "2026-03-23T05:07:22Z",
+      "side": 1,
+      "message": "I agree with Patrick that we should not emit a signal during restore, but we do need to emit it during reload.\n\nThat said, the restore fix is outside the scope of this commit. I’d prefer to address it in a separate commit and handle any dependent services there if needed. Any thoughts?",
+      "parentUuid": "d7a6c5fc_77921cfe",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d293f88_e1a91053",
+        "filename": "settings_manager.hpp.mako",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1000427
+      },
+      "writtenOn": "2026-03-23T05:07:22Z",
+      "side": 1,
+      "message": "During reload we need to emit the signal, right? are we emitting?",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
