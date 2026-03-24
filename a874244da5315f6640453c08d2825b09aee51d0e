@@ -16,6 +16,24 @@
       "message": "@spinler@us.ibm.com - Can you take a look?  I think you had concerns with an earlier similar commit.",
       "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a6ae29c_cda3a792",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-03-24T12:45:49Z",
+      "side": 1,
+      "message": "Adding the discussion happened in the previous patch for reference : https://gerrit.openbmc.org/c/openbmc/phosphor-settingsd/+/87963/1..2/settings_main.cpp#b51",
+      "parentUuid": "f4a24992_084636d7",
+      "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
