@@ -307,6 +307,24 @@
       "message": "During reload we need to emit the signal, right? are we emitting?",
       "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "016854ab_665b31d0",
+        "filename": "settings_manager.hpp.mako",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-03-24T05:18:06Z",
+      "side": 1,
+      "message": "Yes, it will emit property changed signals after updates the value into DBus and is handled by the DBus generated code to set the value.",
+      "parentUuid": "5d293f88_e1a91053",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
