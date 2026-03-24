@@ -11,9 +11,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     // the object namespace and are not under a (settings) root. Hence register
     // "/" as the path.
     sdbusplus::server::manager_t objManager(bus, "/");
-    bus.request_name(SETTINGS_BUSNAME);
 
     phosphor::settings::Manager mgr(bus);
+
+    bus.request_name(SETTINGS_BUSNAME);
 
     while (true)
     {
