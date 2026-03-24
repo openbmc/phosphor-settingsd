@@ -334,6 +334,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72dd49a5_91078b4e",
+        "filename": "settings_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2026-03-24T15:07:54Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "3344242d_6530fa61",
+      "revId": "595c21ddcf1047b96f196e6de5d1b25e27879a15",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d293f88_e1a91053",
