@@ -61,6 +61,7 @@ def get_default_value(object, interface, prop):
     % endfor
 % endfor
 #include <cereal/archives/json.hpp>
+#include <cereal/types/tuple.hpp>
 #include <cereal/types/vector.hpp>
 #include <fstream>
 #include <utility>
