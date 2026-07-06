@@ -32,7 +32,6 @@
 # data within them will be kept sorted.
 
 owners:
-- anoo@us.ibm.com
 - deepak.kodihalli.83@gmail.com
 - patrick@stwcx.xyz
 
@@ -41,9 +40,6 @@ reviewers:
 matchers:
 
 openbmc:
-- name: Adriana Kobylak
-  email: anoo@us.ibm.com
-  discord: anoo
 - name: Deepak Kodihalli
   email: deepak.kodihalli.83@gmail.com
   discord: dkodihal
