@@ -69,6 +69,24 @@
       "parentUuid": "3aaba7bc_8ed94096",
       "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e46ba292_585c125f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-10-06T11:45:19Z",
+      "side": 1,
+      "message": "The concern raised by Matt is resolved by watching for NameOwnerChanged Signal instead of IA.\nPatch details : https://gerrit.openbmc.org/c/openbmc/phosphor-logging/+/95058",
+      "parentUuid": "7a6ae29c_cda3a792",
+      "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
