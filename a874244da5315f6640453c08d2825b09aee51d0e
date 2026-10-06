@@ -51,6 +51,24 @@
       "message": "Can you send a note to the list mentioning that this commit will change behavior and that it won\u0027t emit interfaces added signals on startup anymore?\n\nAnd also, put up your proposed changed to phosphor-logging?",
       "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d97566ce_9d9d54f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001993
+      },
+      "writtenOn": "2026-10-06T11:43:13Z",
+      "side": 1,
+      "message": "@spinler@us.ibm.com\n\nYes, I have sent a note to the OpenBMC mailing list highlighting the behavioral change introduced by this patch and asked if anyone else has a dependency on the InterfacesAdded (IA) signal.\n\nAlso, the dependency on InterfacesAdded signals in phosphor-logging has been addressed by watching the NameOwnerChanged signal instead with this patch [https://gerrit.openbmc.org/c/openbmc/phosphor-logging/+/95058 ]\n\ncc : @patrick@stwcx.xyz",
+      "parentUuid": "3aaba7bc_8ed94096",
+      "revId": "a874244da5315f6640453c08d2825b09aee51d0e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
